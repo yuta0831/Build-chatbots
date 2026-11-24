@@ -1,0 +1,46 @@
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+
+train_data = pd.read_csv("final_fitted_purchase_again_data.csv")
+test_data = pd.read_csv("final_fitted_purchase_again_data_eval.csv")
+
+'''
+print(train_data.info())
+print(train_data.isnull().sum())
+
+print(test_data.info())
+print(test_data.isnull().sum())
+
+no null in the data
+'''
+
+X_train = train_data[['AgeCount', 'GenderType', 'PrepurchaseAmount']]
+Y_train = train_data['PurchaseAgain']
+
+X_test = test_data[['AgeCount', 'GenderType', 'PrepurchaseAmount']]
+Y_test = test_data['PurchaseAgain']
+
+# Convert GenderType to numbers
+X_train['GenderType'] = X_train['GenderType'].map({'Male': 1, 'Female': 0})
+X_test['GenderType'] = X_test['GenderType'].map({'Male': 1, 'Female': 0})
+
+#Use logistic Regression
+model = LogisticRegression()
+#train the model, finish TASK1
+model.fit(X_train, Y_train)
+
+#==============================================================
+#TASK2
+
+#test data
+Y_pred = model.predict(X_test)
+
+#check Accuracy
+accuracy = accuracy_score(Y_test, Y_pred)
+print("Accuracy:", accuracy)
+
+#Confusion matrix for evaluating prediction results
+cm = confusion_matrix(Y_test, Y_pred) #Y_test=actual number, Y_pred=prediction number
+print(cm)
